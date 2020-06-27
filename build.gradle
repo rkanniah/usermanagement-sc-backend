@@ -1,0 +1,57 @@
+plugins {
+
+    id 'scala'
+    id 'java-library'
+    id 'org.springframework.boot' version '2.3.0.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'org.asciidoctor.convert' version '1.5.8'
+}
+
+group = 'com.rk'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+ext {
+	set('snippetsDir', file("build/generated-snippets"))
+	set('springCloudVersion', "Hoxton.SR5")
+}
+
+dependencies {
+    implementation 'org.scala-lang:scala-library:2.12.9'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.scalatest:scalatest_2.12:3.0.8'
+    testRuntimeOnly 'org.scala-lang.modules:scala-xml_2.12:1.2.0'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	runtimeOnly 'com.h2database:h2'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+test {
+	outputs.dir snippetsDir
+	useJUnitPlatform()
+}
+
+asciidoctor {
+	inputs.dir snippetsDir
+	dependsOn test
+}
+
+task run(type: JavaExec, dependsOn: classes) {
+    main = 'com.rk.usermanagement.UserManagementApp'
+    classpath sourceSets.main.runtimeClasspath
+}
