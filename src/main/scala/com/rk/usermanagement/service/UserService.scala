@@ -18,23 +18,23 @@ import scala.util.{ Failure, Success }
 @Transactional
 class UserService(@Autowired private val userRepository: UserRepository) {
 
-  def addUser(user: User): Future[User] = {
-    Future(userRepository.save(user))
+  def addUser(user: User): User = {
+    userRepository.save(user)
   }
 
-  def updateUser(userToUpdate: User): Future[User] = {
-    Future(userRepository.save(userToUpdate))
+  def updateUser(userToUpdate: User): User = {
+    userRepository.save(userToUpdate)
   }
 
-  def deleteUser(user: User): Future[Unit] = {
-    Future(userRepository.delete(user))
+  def deleteUser(user: User): Unit = {
+    userRepository.delete(user)
   }
 
-  def getAllUsers(): Future[Array[User]] = {
-    Future(userRepository.findAll().asScala.toArray)
+  def getAllUsers(): Array[User] = {
+    userRepository.findAll().asScala.toArray
   }
 
-  def findUser(email: String): Future[User] = {
-    Future(userRepository.findByEmail(email))
+  def findUser(email: String): User = {
+    userRepository.findByEmail(email)
   }
 }
